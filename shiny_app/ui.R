@@ -46,6 +46,16 @@ ui <- fluidPage(titlePanel("IMDB Movies"),
                                          )
                                        )),
                               tabPanel("Help",
+                                       h1("Plot tab"),
+                                       h3("Use the sliders to filter the points plot, the histogram plot is not reactive."),
+                                       br(),
+                                       br(),
+                                       h1("Search tab"),
+                                       h3("Select the feature you want to filter by in the list and then type in the search bar, with respect with case sensitivity."),
+                                       br(),
+                                       br(),
+                                       h1("Cloud tab"),
+                                       h3("You can either select from the list or type the director and this will display the genres corresponding to his/her films. You can also use the slider to filter the maximum words to display.")
                                        )
                   ),
 
