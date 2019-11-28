@@ -17,6 +17,14 @@ Slide With Code
 
 ```r
 library(data.table)
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(wordcloud)
+library(wordcloud2)
+library(tm)
+library(stringr)
+library(tidyr)
 movies <- read.csv("tmdb-movies.csv", stringsAsFactors = FALSE)
 movies = subset(movies, select = -c(revenue,budget,imdb_id, homepage, tagline, overview, keywords) )
 colnames(movies)[colnames(movies)=="budget_adj"] <- "budget"
