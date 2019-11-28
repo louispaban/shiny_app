@@ -15,7 +15,15 @@ Slide With Code
 ========================================================
 
 ```{r}
+library(data.table)
+movies <- read.csv("tmdb-movies.csv", stringsAsFactors = FALSE)
+movies = subset(movies, select = -c(revenue,budget,imdb_id, homepage, tagline, overview, keywords) )
+colnames(movies)[colnames(movies)=="budget_adj"] <- "budget"
+colnames(movies)[colnames(movies)=="revenue_adj"] <- "revenue"
+movies = movies[!(is.na(movies$genres) | movies$genres==""), ]
 
+pop_outliers <- movies[movies$popularity <= 3, ]
+summary(movies)
 ```
 
 Plot example:Popularity of the different genres
