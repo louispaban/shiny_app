@@ -1,0 +1,45 @@
+IMDB Movies
+========================================================
+author: Adrien Mina, Louis Paban, Steven Tan
+date: 28th of November
+autosize: true
+
+First Slide
+========================================================
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+Slide With Code
+========================================================
+
+```{r}
+summary(cars)
+```
+
+Slide With Plot
+========================================================
+
+```{r, echo=FALSE}
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(wordcloud)
+library(wordcloud2)
+library(tm)
+library(stringr)
+library(tidyr)
+movies <- read.csv("tmdb-movies.csv", stringsAsFactors = FALSE)
+movies = subset(movies, select = -c(revenue,budget,imdb_id, homepage, tagline, overview, keywords) )
+colnames(movies)[colnames(movies)=="budget_adj"] <- "budget"
+colnames(movies)[colnames(movies)=="revenue_adj"] <- "revenue"
+movies$genres <- str_replace_all(movies$genres, '\\|', '\n')
+movies$production_companies <- str_replace_all(movies$production_companies, '\\|', '\n')
+movies$cast <- str_replace_all(movies$cast, '\\|', '\n')
+movies = movies[!(is.na(movies$genres) | movies$genres==""), ]
+
+pop_outliers <- movies[movies$popularity <= 3, ]
+ggplot(separate_rows(pop_outliers, genres, convert = TRUE), aes(x = popularity,color = genres)) + geom_histogram(fill="white", position="dodge") + theme(legend.position="top")
+
+```
