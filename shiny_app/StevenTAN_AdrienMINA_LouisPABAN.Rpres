@@ -1,0 +1,74 @@
+Presentation
+========================================================
+author: Steven TAN, Adrien MINA, Louis PABAN
+date: 01/12/2019
+autosize: true
+
+Our application
+========================================================
+
+Dataset : IMDB Movies
+
+- Statistics
+- Search Table
+- Wordcloud
+
+Slide With Code
+========================================================
+
+```{r}
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(wordcloud)
+library(wordcloud2)
+library(tm)
+library(stringr)
+library(tidyr)
+library(knitr)
+
+movies <- read.csv("D:/ECE ING5/Data Analytics/Shiny/tmdb-movies.csv", stringsAsFactors = FALSE)
+movies = subset(movies, select = -c(revenue,budget,imdb_id, homepage, tagline, overview, keywords) )
+colnames(movies)[colnames(movies)=="budget_adj"] <- "budget"
+colnames(movies)[colnames(movies)=="revenue_adj"] <- "revenue"
+movies$genres <- str_replace_all(movies$genres, '\\|', '\n')
+movies$production_companies <- str_replace_all(movies$production_companies, '\\|', '\n')
+movies$cast <- str_replace_all(movies$cast, '\\|', '\n')
+movies = movies[!(is.na(movies$genres) | movies$genres==""), ]
+
+pop_outliers <- movies[movies$popularity <= 3, ]
+
+movies = movies %>% 
+  mutate(director = strsplit(as.character(director), "\\|")) %>% 
+  unnest(director)
+
+separate_movies = separate_rows(movies, genres, convert = TRUE)
+separate_movies = separate_rows(separate_movies, director, convert = TRUE)
+count_genres <- count(separate_movies, genres)
+
+
+```
+
+Statistics
+========================================================
+
+```{r, echo=FALSE}
+ggplot(movies, aes(x = budget,y = revenue)) + geom_point()
+ggplot(movies, aes(x = popularity,y = vote_average)) + geom_point()
+ggplot(separate_rows(pop_outliers, genres, convert = TRUE), aes(x = popularity,color = genres)) + geom_histogram(fill="white", position="dodge") + theme(legend.position="top")
+```
+
+Search Table
+========================================================
+```{r, echo=FALSE}
+head(movies,5)
+```
+
+Wordcloud
+========================================================
+```{r, echo=FALSE}
+wordcloud(words = count_genres$genres, freq = count_genres$n, min.freq = 1, max.words=20,
+              colors = brewer.pal(8, "Dark2"))
+
+```
+
